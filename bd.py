@@ -9,18 +9,18 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 # Configuration MQTT
-MQTT_BROKER = "localhost"  # Remplacez par votre broker MQTT
+MQTT_BROKER = "test.mosquitto.org"  # Remplacez par votre broker MQTT
 MQTT_PORT = 1883
-MQTT_TOPIC = "capteurs/temperature"  # Remplacez par votre topic MQTT
+MQTT_TOPIC = "IUT/Colmar2025/SAE2.04/Maison1"  # Remplacez par votre topic MQTT
 MQTT_USERNAME = None  # Ajoutez si nécessaire
 MQTT_PASSWORD = None  # Ajoutez si nécessaire
 
 # Configuration Base de données
 DB_CONFIG = {
     'host': 'localhost',
-    'user': 'votre_utilisateur',
-    'password': 'votre_mot_de_passe',
-    'database': 'votre_base_de_donnees',
+    'user': 'bdd',
+    'password': 'toto',
+    'database': 'Maison',
     'charset': 'utf8mb4',
     'autocommit': True
 }
