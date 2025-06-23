@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Modifier Capteur</title>
+    <link rel="stylesheet" href="{% static 'Mesures/style.css' %}">
+</head>
+<body>
+    <nav>
+        
+    </nav>
+
+    
+    <div class="container">
+        <h2>Modifier le Capteur</h2>
+        <form method="post" action="{% url 'liste_capteurs' %}">
+            {% csrf_token %}
+            <label for="id_nom_capteur">Nom du capteur :</label>
+            {{ form.nom_capteur }}
+
+            <label for="id_emplacement">Emplacement :</label>
+            {{ form.emplacement }}
+
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
+</body>
+</html>

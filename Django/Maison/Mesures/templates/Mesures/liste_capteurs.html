@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        <title>Liste des Capteurs</title>
+        <link rel="stylesheet" href="{% static 'Mesures/style.css' %}">
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <nav>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="{% url 'index' %}" class="nav-link">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'liste_mesures' %}" class="nav-link">Liste des Mesures</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+
+        <div class="filters">
+            <form method="get">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="nom">Nom du capteur:</label>
+                        <select id="nom" name="nom">
+                            <option value="">-- Tous --</option>
+                            {% for nom in tous_noms %}
+                                <option value="{{ nom }}" {% if filtre_nom == nom %}selected{% endif %}>
+                                    {{ nom }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="emplacement">Emplacement:</label>
+                        <select id="emplacement" name="emplacement">
+                            <option value="">-- Tous --</option>
+                            {% for emplacement in tous_emplacements %}
+                                <option value="{{ emplacement }}" {% if filtre_emplacement == emplacement %}selected{% endif %}>
+                                    {{ emplacement }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <button type="submit">Filtrer</button>
+                    </div>
+                </div>
+            </form>
+            
+            {% if filtre_nom or filtre_emplacement %}
+            <div class="filter-row">
+                <a href="?">
+                    <button type="button" class="clear-btn">Effacer les filtres</button>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if filtre_nom or filtre_emplacement or filtre_temp_min or filtre_temp_max or filtre_date_debut or filtre_date_fin %}
+        <div class="results-info">
+            Filtres actifs:
+            {% if filtre_nom %} Nom: "{{ filtre_nom }}"{% endif %}
+            {% if filtre_emplacement %} Emplacement: "{{ filtre_emplacement }}"{% endif %}
+            {% if filtre_temp_min %} Temp min: {{ filtre_temp_min }}°C{% endif %}
+            {% if filtre_temp_max %} Temp max: {{ filtre_temp_max }}°C{% endif %}
+            {% if filtre_date_debut %} Du: {{ filtre_date_debut }}{% endif %}
+            {% if filtre_date_fin %} Au: {{ filtre_date_fin }}{% endif %}
+        </div>
+        {% endif %}
+
+        <table>
+            <tr>
+            <th>id du capteur</th>
+            <th>Nom</th>
+            <th>piece</th>
+            <th>emplacement</th>
+            <th>Modification</th>
+        </tr>
+        {% for capteur in capteurs %}
+        <tr>
+            <td>{{ capteur.id_capteur }}</td>
+            <td>{{ capteur.nom_capteur}}</td>
+            <td>{{ capteur.piece}}</td>
+            <td>{{ capteur.emplacement}}</td>
+            <td><a href="{% url 'modifier_capteur' capteur.id_capteur %}">Modifier</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucune capteur trouvé.</td></tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>

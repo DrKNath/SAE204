@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Liste des Mesures</title>
+    <link rel="stylesheet" href="{% static 'Mesures/style.css' %}">
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% url 'index' %}" class="nav-link">Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'liste_capteurs' %}" class="nav-link">Liste des capteurs</a>
+            </li>
+        </ul>
+        <div class="nav-toggle">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+    <h2>Liste des Mesures</h2>
+
+    <div class="filters">
+        <form method="get">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="nom">Nom du capteur:</label>
+                    <select id="nom" name="nom">
+                        <option value="">-- Tous --</option>
+                        {% for nom in tous_noms %}
+                            <option value="{{ nom }}" {% if filtre_nom == nom %}selected{% endif %}>
+                                {{ nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="emplacement">Emplacement:</label>
+                    <select id="emplacement" name="emplacement">
+                        <option value="">-- Tous --</option>
+                        {% for emplacement in tous_emplacements %}
+                            <option value="{{ emplacement }}" {% if filtre_emplacement == emplacement %}selected{% endif %}>
+                                {{ emplacement }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="temp_min">Température min:</label>
+                    <input type="number" id="temp_min" name="temp_min" value="{{ filtre_temp_min }}" step="0.1" placeholder="Ex: 15.5">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="temp_max">Température max:</label>
+                    <input type="number" id="temp_max" name="temp_max" value="{{ filtre_temp_max }}" step="0.1" placeholder="Ex: 25.0">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="date_debut">Date début:</label>
+                    <input type="date" id="date_debut" name="date_debut" value="{{ filtre_date_debut }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="date_fin">Date fin:</label>
+                    <input type="date" id="date_fin" name="date_fin" value="{{ filtre_date_fin }}">
+                </div>
+                
+                <div class="filter-group">
+                    <button type="submit">Filtrer</button>
+                </div>
+            </div>
+        </form>
+        
+        {% if filtre_nom or filtre_emplacement or filtre_temp_min or filtre_temp_max or filtre_date_debut or filtre_date_fin %}
+        <div class="filter-row">
+            <a href="?">
+                <button type="button" class="clear-btn">Effacer les filtres</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if filtre_nom or filtre_emplacement or filtre_temp_min or filtre_temp_max or filtre_date_debut or filtre_date_fin %}
+    <div class="results-info">
+        Filtres actifs:
+        {% if filtre_nom %} Nom: "{{ filtre_nom }}"{% endif %}
+        {% if filtre_emplacement %} Emplacement: "{{ filtre_emplacement }}"{% endif %}
+        {% if filtre_temp_min %} Temp min: {{ filtre_temp_min }}°C{% endif %}
+        {% if filtre_temp_max %} Temp max: {{ filtre_temp_max }}°C{% endif %}
+        {% if filtre_date_debut %} Du: {{ filtre_date_debut }}{% endif %}
+        {% if filtre_date_fin %} Au: {{ filtre_date_fin }}{% endif %}
+    </div>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th>Nom du Capteur</th>
+            <th>Emplacement</th>
+            <th>Température</th>
+            <th>Date/Heure</th>
+        </tr>
+        {% for mesure in mesures %}
+        <tr>
+            <td>{{ mesure.id_capteur.nom_capteur }}</td>
+            <td>{{ mesure.id_capteur.emplacement }}</td>
+            <td>{{ mesure.temperature }}°C</td>
+            <td>{{ mesure.timestamp }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">Aucune mesure trouvée.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
