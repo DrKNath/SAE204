@@ -1,102 +1,222 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        {% load static %}
-        <title>Liste des Capteurs</title>
-        <link rel="stylesheet" href="{% static 'Mesures/style.css' %}">
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        <nav>
+<html lang="fr">
+<head>
+    {% load static %}
+    <title>Liste des Capteurs</title>
+    <link rel="stylesheet" href="{% static 'Mesures/style.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="{% url 'index' %}" class="nav-link">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url 'liste_mesures' %}" class="nav-link">Liste des Mesures</a>
-                </li>
-            </ul>
-            <div class="nav-toggle">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </nav>
-
-        <div class="filters">
-            <form method="get">
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="nom">Nom du capteur:</label>
-                        <select id="nom" name="nom">
-                            <option value="">-- Tous --</option>
-                            {% for nom in tous_noms %}
-                                <option value="{{ nom }}" {% if filtre_nom == nom %}selected{% endif %}>
-                                    {{ nom }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="emplacement">Emplacement:</label>
-                        <select id="emplacement" name="emplacement">
-                            <option value="">-- Tous --</option>
-                            {% for emplacement in tous_emplacements %}
-                                <option value="{{ emplacement }}" {% if filtre_emplacement == emplacement %}selected{% endif %}>
-                                    {{ emplacement }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <button type="submit">Filtrer</button>
-                    </div>
-                </div>
-            </form>
-            
-            {% if filtre_nom or filtre_emplacement %}
-            <div class="filter-row">
-                <a href="?">
-                    <button type="button" class="clear-btn">Effacer les filtres</button>
-                </a>
-            </div>
-            {% endif %}
+            <span class="nav-title">Capteurs</span>
         </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{% url 'index' %}" class="nav-link">
+                    <span class="nav-link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                        </svg>
+                    </span>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'liste_mesures' %}" class="nav-link">
+                    <span class="nav-link-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                        </svg>
+                    </span>
+                    Mesures
+                </a>
+            </li>
+        </ul>
+    </nav>
 
-        {% if filtre_nom or filtre_emplacement or filtre_temp_min or filtre_temp_max or filtre_date_debut or filtre_date_fin %}
-        <div class="results-info">
-            Filtres actifs:
-            {% if filtre_nom %} Nom: "{{ filtre_nom }}"{% endif %}
-            {% if filtre_emplacement %} Emplacement: "{{ filtre_emplacement }}"{% endif %}
-            {% if filtre_temp_min %} Temp min: {{ filtre_temp_min }}°C{% endif %}
-            {% if filtre_temp_max %} Temp max: {{ filtre_temp_max }}°C{% endif %}
-            {% if filtre_date_debut %} Du: {{ filtre_date_debut }}{% endif %}
-            {% if filtre_date_fin %} Au: {{ filtre_date_fin }}{% endif %}
+    <div class="page-header">
+        <h1 class="page-title">Gestion des Capteurs</h1>
+        <p class="page-subtitle">Visualisez et gérez tous vos capteurs de température</p>
+    </div>
+
+    <div class="filters-card">
+        <div class="card-header">
+            <h3 class="card-title">Filtres de Recherche</h3>
+        </div>
+        <form method="get" class="filters-form">
+            <div class="filters-grid filters-grid-simple">
+                <div class="form-group">
+                    <label for="nom">Nom du capteur</label>
+                    <select id="nom" name="nom" class="form-control">
+                        <option value="">-- Tous --</option>
+                        {% for nom in tous_noms %}
+                            <option value="{{ nom }}" {% if filtre_nom == nom %}selected{% endif %}>
+                                {{ nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emplacement">Emplacement</label>
+                    <select id="emplacement" name="emplacement" class="form-control">
+                        <option value="">-- Tous --</option>
+                        {% for emplacement in tous_emplacements %}
+                            <option value="{{ emplacement }}" {% if filtre_emplacement == emplacement %}selected{% endif %}>
+                                {{ emplacement }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filters-actions">
+                <button type="submit" class="btn btn-primary">
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                    </span>
+                    Filtrer
+                </button>
+                
+                {% if filtre_nom or filtre_emplacement %}
+                <a href="?" class="btn btn-secondary">
+                    <span class="btn-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </span>
+                    Effacer les filtres
+                </a>
+                {% endif %}
+            </div>
+        </form>
+        
+        {% if filtre_nom or filtre_emplacement %}
+        <div class="active-filters">
+            <span class="active-filters-label">Filtres actifs :</span>
+            {% if filtre_nom %}<span class="filter-tag">Nom: {{ filtre_nom }}</span>{% endif %}
+            {% if filtre_emplacement %}<span class="filter-tag">Emplacement: {{ filtre_emplacement }}</span>{% endif %}
         </div>
         {% endif %}
+    </div>
 
-        <table>
-            <tr>
-            <th>id du capteur</th>
-            <th>Nom</th>
-            <th>piece</th>
-            <th>emplacement</th>
-            <th>Modification</th>
-        </tr>
-        {% for capteur in capteurs %}
-        <tr>
-            <td>{{ capteur.id_capteur }}</td>
-            <td>{{ capteur.nom_capteur}}</td>
-            <td>{{ capteur.piece}}</td>
-            <td>{{ capteur.emplacement}}</td>
-            <td><a href="{% url 'modifier_capteur' capteur.id_capteur %}">Modifier</a></td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">Aucune capteur trouvé.</td></tr>
-        {% endfor %}
-        </table>
-    </body>
+    <div class="table-card">
+        <div class="card-header">
+            <h3 class="card-title">Liste des Capteurs</h3>
+            <div class="card-actions">
+                <span class="sensors-count">{{ capteurs|length }} capteur{{ capteurs|length|pluralize }}</span>
+            </div>
+        </div>
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="th-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12l2 2 4-4"></path>
+                                    <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"></path>
+                                    <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"></path>
+                                    <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"></path>
+                                    <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"></path>
+                                </svg>
+                                ID Capteur
+                            </span>
+                        </th>
+                        <th>
+                            <span class="th-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Nom
+                            </span>
+                        </th>
+                        <th>
+                            <span class="th-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                                </svg>
+                                Pièce
+                            </span>
+                        </th>
+                        <th>
+                            <span class="th-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Emplacement
+                            </span>
+                        </th>
+                        <th>
+                            <span class="th-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Actions
+                            </span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for capteur in capteurs %}
+                    <tr class="sensor-row">
+                        <td class="cell-id">
+                            <span class="sensor-id-badge">{{ capteur.id_capteur }}</span>
+                        </td>
+                        <td class="cell-name">
+                            <div class="sensor-info">
+                                <span class="sensor-name">{{ capteur.nom_capteur }}</span>
+                            </div>
+                        </td>
+                        <td class="cell-room">{{ capteur.piece }}</td>
+                        <td class="cell-location">{{ capteur.emplacement }}</td>
+                        <td class="cell-actions">
+                            <a href="{% url 'modifier_capteur' capteur.id_capteur %}" class="btn btn-small btn-outline">
+                                <span class="btn-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </span>
+                                Modifier
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="cell-empty">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                                <span>Aucun capteur trouvé</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
 </html>
